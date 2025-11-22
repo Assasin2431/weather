@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Артём">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Погода</title>
+    <style>
+        header {
+            display:flex;
+            border: 2px groove black;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            height: 10vh;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10%;
+            background-color: #003153;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        button {
+            border: 1px dashed black;
+            border-radius:16px;
+            width: 15%;
+            height: 8vh;
+            cursor: pointer;
+            font-size: 14px;
+            background-color: #4285B4;
+        }
+        #Cont {
+            display: flex;
+            margin-left: 10%;
+            margin-right:10%;
+            margin-top:1%;
+            justify-content: space-between;
+        }
+        #weatherNovosib, #weatherMoscow {
+            display:none;
+            padding: 20px;
+            border: 1px solid black;
+            border-radius: 16px;
+            width: 15%;
+            height: 15%;
+            background-color: #A6BDD7;
+        }
+        p {
+            font-weight: bolder;
+        }
+        #bottom {
+        position: absolute;
+        top: 50%;           
+        left: 0;          
+        width: 100%;      
+        height: 50%;
+        background-image: url("sky.png");
+        background-repeat: repeat-x;
+        }
+
+    </style>
+</head>
+<body style="background-color: #56bced;">
+    <header>
+        <button id="weatherButtonNovosib">Погода в Новосибирске</button>
+        <button id="weatherButtonMoscow">Погода в Москве</button>
+    </header>
+
+    <div id="Cont">
+        <div id="weatherNovosib"></div>
+        <div id="weatherMoscow"></div>
+    </div>
+
+    <script>
+        const weatherButtonNovosib = document.getElementById('weatherButtonNovosib');
+        const widgetNovosib = document.getElementById('weatherNovosib');
+        const weatherButtonMoscow = document.getElementById('weatherButtonMoscow');
+        const widgetMoscow = document.getElementById('weatherMoscow');
+
+        weatherButtonNovosib.addEventListener('click', () => {
+            fetch('https://api.open-meteo.com/v1/forecast?latitude=55.03&longitude=82.92&current_weather=true')
+            .then(res => res.json())
+            .then(data => {
+                const current = data.current_weather;
+                widgetNovosib.style.display = 'block';
+                widgetNovosib.innerHTML = `
+                    <p>Температура: ${current.temperature}°C</p>
+                    <p>Ветер: ${current.windspeed} км/ч</p>
+                    <p>Направление ветра: ${current.winddirection}°</p>
+                `;
+            });
+        });
+
+        weatherButtonMoscow.addEventListener('click', () => {
+            fetch('https://api.open-meteo.com/v1/forecast?latitude=55.75&longitude=37.62&current_weather=true')
+            .then(res => res.json())
+            .then(data => {
+                const current = data.current_weather;
+                widgetMoscow.style.display = 'block';
+                widgetMoscow.innerHTML = `
+                    <p>Температура: ${current.temperature}°C</p>
+                    <p>Ветер: ${current.windspeed} км/ч</p>
+                    <p>Направление ветра: ${current.winddirection}°</p>
+                `;
+            });
+        });
+    </script>
+    <div id="bottom">
+    </div>
+</body>
+</html>
